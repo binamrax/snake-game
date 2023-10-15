@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Snake</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <canvas id="board">
+    </canvas>
+    <div id="overlay" class="overlay">
+        <div class="overlay-body">
+            <p>Press the Start Button to play the snake</p>
+            <button type="button" id="startBtn">Play</button>
+        </div>
+    </div>
+    <audio id="gamePlay" src="sound/gameplay.wav" loop="true"></audio>
+    <audio id="eatFood" src="sound/eat-food.wav"></audio>
+    <audio id="changeDirection" src="sound/move.wav"></audio>
+    <audio id="gameOver" src="sound/gameover.wav"></audio>
+    <script src="js/sound.js"></script>
+    <script src="js/food.js"></script>
+    <script src="js/snake.js"></script>
+    <script src="js/screen.js"></script>
+    <script src="js/event.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

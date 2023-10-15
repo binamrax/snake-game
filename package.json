@@ -1,0 +1,29 @@
+{
+  "name": "snake-game",
+  "version": "2.2.0",
+  "description": "Html and JS Snake Game. It is developed using canvas.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "gendoc": "jsdoc ./src/snake.js",
+    "doc": "jsdoc -c jsdoc.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/binamrax/snake-game.git"
+  },
+  "keywords": [
+    "html-game",
+    "snake",
+    "js-game"
+  ],
+  "author": "ven",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/binamrax/snake-game/issues"
+  },
+  "homepage": "https://github.com/binamrax/snake-game#readme",
+  "devDependencies": {
+    "jsdoc": "^4.0.2"
+  }
+}

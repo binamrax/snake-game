@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: screen.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: screen.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+
+class Screen {
+    /**
+     * 
+     * @param {Element} canvas - Game Canvas
+     * @param {Object} sound -Sound Class
+     */
+    constructor(canvas, sound) {
+        this.isGameFinished = false;
+        this.score = 0;
+        this.dot = 20
+        this.screenBorder = 20;
+        this.gameBoxWidth = canvas.width - this.screenBorder;
+        this.gameBoxHeight = canvas.height - this.screenBorder;
+
+        /**
+        * @type {string}
+        * @constant
+        */
+        this.screenBorderColor = "#5CBC43";
+
+        /**
+         * @type {string}
+         * @constant
+         */
+        this.screenBackgroundColor = "orange";
+        /**
+        * @type {string}
+        * @constant
+        */
+        this.sound = sound;
+        /** @type {CanvasRenderingContext2D} */
+        this.ctx = canvas.getContext("2d");
+        this.snake=new Snake(this.dot,this.ctx);
+        this.food = new Food(this.dot, this.ctx)
+
+        this.speed = 207;
+
+    }
+
+    /**
+     * Initial Function. It makes snake and food.
+     * @function
+     * 
+     */
+    init() {
+        this.drawGameBox();
+        
+        this.snake.init(this.screenBorder,this.gameBoxHeight);
+        this.food.init(this.screenBorder, this.gameBoxWidth, this.gameBoxHeight);
+        this.loop();
+        this.sound.game();
+    }
+
+    /**
+     * Main Fuction - It is looping function. It checks everything that happens in game.
+     * @function 
+     */
+    loop() {
+        if (this.isGameFinished) {
+            this.sound.gamePause();
+            return;
+        }
+        this.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        this.drawGameBox();
+        this.snake.move();
+        let me = this;
+        if (this.checkHit()) {
+            this.message(false);
+            this.sound.gamePause();
+            setTimeout(() => {
+                overlay.classList.remove('hide');
+            }, me.speed);
+
+            return;
+        } else {
+            this.food.draw();
+            this.snake.draw();
+            this.message();
+            this.eatFood(this.snake.snakeAr[0]);
+            setTimeout(function () { me.loop() }, this.speed);
+        }
+
+    }
+
+    /**
+     * Checks weather it collide itself or collide in the wall.
+     * @function
+     * @returns {boolean} Either True or false
+     */
+
+    checkHit() {
+        const head = this.snake.snakeAr[0];
+        // Check hit with walls
+        if (head.x &lt; this.screenBorder || head.x >= this.gameBoxWidth - this.screenBorder || head.y &lt; this.screenBorder || head.y >= this.gameBoxHeight - this.screenBorder) {
+            this.isGameFinished = true;
+            return true;
+        }
+        // Check hit with itself
+        for (let i = 1; i &lt; this.snake.snakeAr.length; i++) {
+            if (this.snake.snakeAr[i].x === head.x &amp;&amp; this.snake.snakeAr[i].y === head.y) {
+
+                this.isGameFinished = true;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * It checks whether snake has eaten food or not.
+     * @function
+     */
+    eatFood(head) {
+        if (head.x === this.food.x &amp;&amp; head.y === this.food.y) {
+            this.score += 5;
+            //play sound
+            this.sound.eatFood();
+            // Generate new food position
+            this.food.init(this.screenBorder, this.gameBoxWidth, this.gameBoxHeight);
+        } else {
+            this.snake.snakeAr.pop();
+        }
+    }
+
+    /**
+     * It draws screen and border of screen.
+     * @function
+     */
+    drawGameBox() {
+        this.ctx.strokeStyle = this.screenBorderColor;
+        this.ctx.lineWidth = this.screenBorder;
+        this.ctx.fillStyle = this.screenBackgroundColor;
+        this.ctx.fillRect(this.screenBorder / 2, this.screenBorder / 2, this.gameBoxWidth, this.gameBoxHeight)
+        this.ctx.strokeRect(this.screenBorder / 2, this.screenBorder / 2, this.gameBoxWidth, this.gameBoxHeight)
+    }
+
+    /**
+     * It sends message for player.
+     * @function
+     * @param {boolean} flag True for Score and False for Game End.
+     */
+    message(flag = true) {
+        this.ctx.font = `bold ${this.screenBorder / 2}px verdana, sans-serif`;
+        this.ctx.fillStyle = flag ? "#fff" : "#A343BC";
+        this.ctx.textAlign = "center";
+        const msg = flag ? "Your Score: " + this.score : "You scored " + this.score + ". Game Over...";
+        /**
+         * If you want to know location of snake.
+         */
+        //const msg = flag ? "Your Score:" + this.score + ` snake x:${snake[0].x} y:${snake[0].y} food ${food.x} ${food.y}` : "You scored " + this.score + ". Game Over...";
+        this.ctx.fillText(msg, (canvas.width / 2), this.screenBorder / 2 + this.screenBorder / 6);
+    }
+
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DomEvent.html">DomEvent</a></li><li><a href="Food.html">Food</a></li><li><a href="Screen.html">Screen</a></li><li><a href="Snake.html">Snake</a></li><li><a href="Sound.html">Sound</a></li></ul><h3>Global</h3><ul><li><a href="global.html#gscreen">gscreen</a></li><li><a href="global.html#startBtn">startBtn</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Oct 15 2023 10:01:02 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
